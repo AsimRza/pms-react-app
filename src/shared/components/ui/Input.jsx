@@ -6,6 +6,7 @@ const Input = ({
   value,
   onChange,
   className = "",
+
   ...props
 }) => {
   return (

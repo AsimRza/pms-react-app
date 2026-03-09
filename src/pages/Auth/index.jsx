@@ -2,15 +2,43 @@ import React, { useState } from "react";
 import { User, Lock, LogIn } from "lucide-react";
 import Input from "@shared/components/ui/Input";
 import Button from "@shared/components/ui/Button";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { useServices } from "../../providers/hooks";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
+import { ROUTES } from "../../shared/consts";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle login logic here
-    console.log("Login attempt:", { email, password });
+  const navigate = useNavigate();
+
+  const { authService } = useServices();
+
+  const loginMutation = useMutation({
+    mutationFn: (data) => authService.login(data),
+  });
+
+  const handleLogin = (data) => {
+    loginMutation.mutate(data, {
+      onSuccess: (response) => {
+        toast.success("Uğurla daxil oldunuz!");
+        localStorage.setItem("accessToken", response.accessToken);
+        localStorage.setItem("refreshToken", response.refreshToken);
+        localStorage.setItem("user", JSON.stringify(response.user));
+        navigate(ROUTES.DASHBOARD);
+      },
+      onError: () => {
+        toast.error(
+          "Email və ya şifrə yanlışdır. Zəhmət olmasa, yenidən cəhd edin.",
+        );
+      },
+    });
   };
 
   return (
@@ -20,7 +48,7 @@ const Login = () => {
           <h2 className="text-2xl font-bold text-gray-800">Müəllim Girişi</h2>
           <p className="text-gray-600">Sisteme daxil olun</p>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(handleLogin)}>
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -30,12 +58,18 @@ const Login = () => {
               Email
             </label>
             <Input
-              type="email"
               placeholder="Emailinizi daxil edin"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              {...register("email", {
+                required: "Bu xana vacibdir",
+                validate: (value) =>
+                  /\S+@\S+\.\S+/.test(value) || "Email formatı düzgün deyil",
+              })}
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
           <div className="mb-6">
             <label
@@ -48,10 +82,19 @@ const Login = () => {
             <Input
               type="password"
               placeholder="Şifrənizi daxil edin"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              {...register("password", {
+                required: "Bu xana vacibdir",
+                minLength: {
+                  value: 6,
+                  message: "Şifrə ən az 6 simvol olmalıdır",
+                },
+              })}
             />
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
           <Button type="submit" className="w-full">
             <LogIn className="inline w-4 h-4 mr-2" />
