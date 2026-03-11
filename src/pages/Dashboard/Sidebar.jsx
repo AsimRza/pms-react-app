@@ -8,23 +8,43 @@ import {
   LogOut,
 } from "lucide-react";
 import { ROUTES } from "../../shared/consts";
+import { useMutation } from "@tanstack/react-query";
+import { clearAuth } from "../../shared/utils";
+import { toast } from "react-toastify";
+import { useServices, useUser } from "../../providers/hooks";
+import Button from "../../shared/components/ui/Button";
 
 const Sidebar = () => {
   const navigate = useNavigate();
 
   // Placeholder user data
-  const user = { firstName: "John", lastName: "Doe" };
+  const user = useUser();
+
+  console.log(user, "user");
+
+  const { authService } = useServices();
+
+  const logoutQuery = useMutation({
+    mutationFn: () => authService.logout(),
+    onSuccess: () => {
+      clearAuth();
+      navigate(ROUTES.LOGIN);
+      toast.success("Successfully logout! See you again");
+    },
+    onError: () => {
+      toast.error("Error occured!");
+    },
+  });
 
   const handleLogout = () => {
-    // Handle logout logic here, e.g., clear tokens
-    navigate(ROUTES.LOGIN);
+    logoutQuery.mutate();
   };
 
   const navItems = [
-    { to: "/dashboard/grading", label: "Qiymətləndirmə", icon: GraduationCap },
-    { to: "/dashboard/lessons", label: "Dərslər", icon: BookOpen },
-    { to: "/dashboard", label: "Statistika", icon: BarChart3 },
     { to: "/dashboard/students", label: "Tələbələr", icon: Users },
+    { to: "/dashboard/lessons", label: "Dərslər", icon: BookOpen },
+    { to: "/dashboard/grading", label: "Qiymətləndirmə", icon: GraduationCap },
+    { to: "/dashboard/statistics", label: "Statistika", icon: BarChart3 },
   ];
 
   return (
@@ -42,7 +62,7 @@ const Sidebar = () => {
             <p className="font-semibold">
               {user.firstName} {user.lastName}
             </p>
-            <p className="text-sm text-gray-400">Müəllim</p>
+            <p className="text-sm text-gray-400">{user.type}</p>
           </div>
         </div>
       </div>
@@ -66,13 +86,14 @@ const Sidebar = () => {
         </ul>
       </nav>
       <div className="p-4 border-t border-gray-700">
-        <button
+        <Button
           onClick={handleLogout}
-          className="flex items-center space-x-3 w-full px-3 py-2 rounded-md hover:bg-gray-700 transition-colors"
+          variant="text"
+          leftIcon={<LogOut className="w-5 h-5" />}
+          loading={logoutQuery.isPending}
         >
-          <LogOut className="w-5 h-5" />
-          <span>Çıxış</span>
-        </button>
+          Çıxış
+        </Button>
       </div>
     </div>
   );

@@ -12,4 +12,8 @@ export class AuthService {
   logout() {
     return this.httpClient.post(`${this._baseUrl}/logout`);
   }
+
+  me() {
+    return this.httpClient.get(`${this._baseUrl}/me`);
+  }
 }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { clearAuth } from "../shared/utils";
 
 const api = axios.create({
   baseURL: "http://localhost:3000/api",
@@ -21,11 +22,6 @@ const processQueue = (error, token = null) => {
   });
 
   failedQueue = [];
-};
-
-const clearAuth = () => {
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("refreshToken");
 };
 
 const redirectToLogin = () => {

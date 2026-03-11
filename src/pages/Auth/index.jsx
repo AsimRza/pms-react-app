@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useServices } from "../../providers/hooks";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { ROUTES } from "../../shared/consts";
 
 const Login = () => {
@@ -14,7 +14,12 @@ const Login = () => {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      email: "user@gmail.com",
+      password: "123456",
+    },
+  });
 
   const navigate = useNavigate();
 
@@ -23,6 +28,9 @@ const Login = () => {
   const loginMutation = useMutation({
     mutationFn: (data) => authService.login(data),
   });
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || ROUTES.STATISTICS;
 
   const handleLogin = (data) => {
     loginMutation.mutate(data, {
@@ -31,7 +39,7 @@ const Login = () => {
         localStorage.setItem("accessToken", response.accessToken);
         localStorage.setItem("refreshToken", response.refreshToken);
         localStorage.setItem("user", JSON.stringify(response.user));
-        navigate(ROUTES.DASHBOARD);
+        navigate(from);
       },
       onError: () => {
         toast.error(
@@ -96,8 +104,12 @@ const Login = () => {
               </p>
             )}
           </div>
-          <Button type="submit" className="w-full">
-            <LogIn className="inline w-4 h-4 mr-2" />
+          <Button
+            loading={loginMutation.isPending}
+            type="submit"
+            className="w-full"
+            leftIcon={<LogIn className="inline w-4 h-4 mr-2" />}
+          >
             Daxil ol
           </Button>
         </form>
