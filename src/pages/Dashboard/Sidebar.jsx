@@ -13,6 +13,7 @@ import { clearAuth } from "../../shared/utils";
 import { toast } from "react-toastify";
 import { useServices, useUser } from "../../providers/hooks";
 import Button from "../../shared/components/ui/Button";
+import { queryClient } from "../../main";
 
 const Sidebar = () => {
   const navigate = useNavigate();

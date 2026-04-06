@@ -1,7 +1,12 @@
 import React from "react";
 import Button from "./Button";
 
-const Error = ({
+interface IProps {
+  message?: string;
+  onRetry?: () => void;
+  className?: string;
+}
+const Error: React.FC<IProps> = ({
   message = "Xəta baş verdi. Zəhmət olmasa yenidən yoxlayın.",
   onRetry,
   className = "",

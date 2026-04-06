@@ -5,6 +5,6 @@ export class UserService {
   }
 
   me() {
-    return this.httpClient.post(`${this._baseUrl}/me`);
+    return this.httpClient.get(`${this._baseUrl}/me`);
   }
 }

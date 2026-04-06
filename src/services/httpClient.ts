@@ -1,5 +1,36 @@
-import axios from "axios";
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 import { clearAuth } from "../shared/utils";
+
+export type HttpClientConfig = AxiosRequestConfig;
+
+export interface IHttpClientMetaResponse<T = unknown> {
+  data: T;
+  headers: AxiosResponse["headers"];
+}
+
+export interface IHttpClient {
+  get: <T = unknown>(url: string, config?: HttpClientConfig) => Promise<T>;
+  getWithMeta: <T = unknown>(
+    url: string,
+    config?: HttpClientConfig,
+  ) => Promise<IHttpClientMetaResponse<T>>;
+  post: <T = unknown, D = unknown>(
+    url: string,
+    data?: D,
+    config?: HttpClientConfig,
+  ) => Promise<T>;
+  put: <T = unknown, D = unknown>(
+    url: string,
+    data?: D,
+    config?: HttpClientConfig,
+  ) => Promise<T>;
+  patch: <T = unknown, D = unknown>(
+    url: string,
+    data?: D,
+    config?: HttpClientConfig,
+  ) => Promise<T>;
+  delete: <T = unknown>(url: string, config?: HttpClientConfig) => Promise<T>;
+}
 
 const api = axios.create({
   baseURL: "http://localhost:3000/api",
@@ -10,9 +41,12 @@ const api = axios.create({
 });
 
 let isRefreshing = false;
-let failedQueue = [];
+let failedQueue: Array<{
+  resolve: (value: string | null) => void;
+  reject: (error: unknown) => void;
+}> = [];
 
-const processQueue = (error, token = null) => {
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach(({ resolve, reject }) => {
     if (error) {
       reject(error);
@@ -41,7 +75,7 @@ const logoutRequest = async () => {
 };
 
 api.interceptors.request.use(
-  (config) => {
+  (config: any) => {
     const authToken = localStorage.getItem("authToken");
 
     if (authToken) {
@@ -50,12 +84,12 @@ api.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error),
+  (error: unknown) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  (response: AxiosResponse) => response,
+  async (error: any) => {
     const originalRequest = error?.config;
     const status = error?.response?.status;
 
@@ -72,7 +106,7 @@ api.interceptors.response.use(
 
     if (status === 403 && !originalRequest._retry) {
       if (isRefreshing) {
-        return new Promise((resolve, reject) => {
+        return new Promise<string | null>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
           .then((newToken) => {
@@ -123,45 +157,68 @@ api.interceptors.response.use(
   },
 );
 
-const request = async (config) => {
+const request = async <T = unknown>(config: HttpClientConfig): Promise<T> => {
   const response = await api(config);
-  return response.data;
+  return response.data as T;
 };
 
-const httpClient = {
-  get: (url, config = {}) =>
-    request({
+const httpClient: IHttpClient = {
+  get: <T = unknown>(url: string, config: HttpClientConfig = {}) =>
+    request<T>({
       url,
       method: "GET",
       ...config,
     }),
 
-  post: (url, data = {}, config = {}) =>
-    request({
+  getWithMeta: async <T = unknown>(
+    url: string,
+    config: HttpClientConfig = {},
+  ): Promise<IHttpClientMetaResponse<T>> => {
+    const response = await api({ url, method: "GET", ...config });
+    return {
+      data: response.data as T,
+      headers: response.headers,
+    };
+  },
+
+  post: <T = unknown, D = unknown>(
+    url: string,
+    data: D = {} as D,
+    config: HttpClientConfig = {},
+  ) =>
+    request<T>({
       url,
       method: "POST",
       data,
       ...config,
     }),
 
-  put: (url, data = {}, config = {}) =>
-    request({
+  put: <T = unknown, D = unknown>(
+    url: string,
+    data: D = {} as D,
+    config: HttpClientConfig = {},
+  ) =>
+    request<T>({
       url,
       method: "PUT",
       data,
       ...config,
     }),
 
-  patch: (url, data = {}, config = {}) =>
-    request({
+  patch: <T = unknown, D = unknown>(
+    url: string,
+    data: D = {} as D,
+    config: HttpClientConfig = {},
+  ) =>
+    request<T>({
       url,
       method: "PATCH",
       data,
       ...config,
     }),
 
-  delete: (url, config = {}) =>
-    request({
+  delete: <T = unknown>(url: string, config: HttpClientConfig = {}) =>
+    request<T>({
       url,
       method: "DELETE",
       ...config,

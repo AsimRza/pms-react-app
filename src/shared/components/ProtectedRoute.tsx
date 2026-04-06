@@ -2,7 +2,10 @@ import React from "react";
 import { Navigate, useLocation } from "react-router";
 import { ROUTES } from "../consts";
 
-const ProtectedRoute = ({ children }) => {
+interface IProps {
+  children: React.ReactNode;
+}
+const ProtectedRoute: React.FC<IProps> = ({ children }) => {
   const accessToken = localStorage.getItem("accessToken");
 
   const location = useLocation();

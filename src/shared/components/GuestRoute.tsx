@@ -1,8 +1,10 @@
 import React from "react";
-import { Navigate, useLocation } from "react-router";
+import { Navigate } from "react-router";
 import { ROUTES } from "../consts";
 
-const GuestRoute = ({ children }) => {
+const GuestRoute: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const accessToken = localStorage.getItem("accessToken");
 
   if (accessToken) {

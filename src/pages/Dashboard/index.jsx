@@ -7,7 +7,7 @@ const Dashboard = () => {
     <div className="flex h-screen">
       <Sidebar />
       <div className="flex-1 overflow-auto p-4">
-        <div className="border w-full h-full p-4">
+        <div className="border rounded-md border-gray-300 w-full h-full p-5 overflow-y-scroll">
           <Outlet />
         </div>
       </div>
