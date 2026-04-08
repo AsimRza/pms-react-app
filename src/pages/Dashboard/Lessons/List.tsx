@@ -16,8 +16,8 @@ const LessonList = () => {
     queryFn: () => lessonService.getList(),
   });
 
-  const handleViewDetails = (lessonId) => {
-    navigate(ROUTES.LESSON_DETAILS.replace(":id", lessonId));
+  const handleViewDetails = (lessonId: number) => {
+    navigate(ROUTES.LESSON_DETAILS.replace(":id", lessonId.toString()));
   };
 
   if (query.isLoading) {
@@ -26,6 +26,11 @@ const LessonList = () => {
 
   if (query.isError) {
     return <Error message={query.error.message} />;
+  }
+  if (!query.data || query.data.length === 0) {
+    return (
+      <div className="text-center text-gray-500">Heç bir dərs tapılmadı</div>
+    );
   }
 
   return (

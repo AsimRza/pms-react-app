@@ -8,7 +8,19 @@ const sizeClasses = {
   lg: "max-w-2xl",
 };
 
-const Modal = ({
+interface IProps {
+  opened: boolean;
+  onClose?: () => void;
+  size?: "sm" | "md" | "lg";
+  title?: string;
+  children: React.ReactNode;
+  showCloseButton?: boolean;
+  closeOnOverlayClick?: boolean;
+  loading?: boolean;
+  loadingMessage?: string;
+  className?: string;
+}
+const Modal: React.FC<IProps> = ({
   opened = false,
   onClose,
   size = "md",
@@ -25,7 +37,7 @@ const Modal = ({
       return undefined;
     }
 
-    const handleEscape = (event) => {
+    const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose?.();
       }

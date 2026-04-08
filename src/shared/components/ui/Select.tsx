@@ -1,6 +1,20 @@
 import React from "react";
 
-const Select = ({
+interface IProps {
+  label?: string;
+  value?: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: Array<string | { label: string; value: string | number }>;
+  placeholder?: string;
+  className?: string;
+  selectClassName?: string;
+  error?: string;
+  helperText?: string;
+  disabled?: boolean;
+  name?: string;
+  id?: string;
+}
+const Select: React.FC<IProps> = ({
   label,
   value,
   onChange,

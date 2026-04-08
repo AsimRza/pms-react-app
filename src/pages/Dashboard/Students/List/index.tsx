@@ -6,8 +6,13 @@ import Error from "../../../../shared/components/ui/Error";
 import Button from "../../../../shared/components/ui/Button";
 import { ROUTES } from "../../../../shared/consts";
 import { useNavigate } from "react-router";
+import type { IFilter } from "..";
 
-const StudentList = ({ filter, limit = 12 }) => {
+interface IProps {
+  filter: IFilter;
+  limit?: number;
+}
+const StudentList: React.FC<IProps> = ({ filter, limit = 12 }) => {
   const { studentService } = useServices();
   const navigate = useNavigate();
   const sentinelRef = useRef(null);
@@ -59,7 +64,7 @@ const StudentList = ({ filter, limit = 12 }) => {
     return <Error message={error.message} />;
   }
 
-  const students = data.pages.flatMap((page) => page.students);
+  const students = data?.pages.flatMap((page) => page.students) || [];
 
   if (students.length === 0) {
     return (
@@ -69,7 +74,7 @@ const StudentList = ({ filter, limit = 12 }) => {
     );
   }
 
-  const handleRedirect = (id) => {
+  const handleRedirect = (id: string) => {
     navigate(ROUTES.STUDENT_DETAILS.replace(":id", id));
   };
 

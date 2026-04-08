@@ -1,6 +1,11 @@
 import React from "react";
 
-const Loading = ({
+interface IProps {
+  message?: string;
+  fullScreen?: boolean;
+  className?: string;
+}
+const Loading: React.FC<IProps> = ({
   message = "Yüklənir...",
   fullScreen = false,
   className = "",

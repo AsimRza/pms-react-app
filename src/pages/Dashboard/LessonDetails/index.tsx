@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServices } from "../../../providers/hooks";
@@ -16,7 +15,7 @@ const LessonDetails = () => {
 
   const query = useQuery({
     queryKey: ["lesson", id],
-    queryFn: () => lessonService.getById(id),
+    queryFn: () => lessonService.getById(Number(id)),
   });
 
   if (query.isLoading) {
@@ -27,11 +26,15 @@ const LessonDetails = () => {
     return <Error message={query.error.message} />;
   }
 
-  const handleStudentDetails = (id) => {
+  const handleStudentDetails = (id: string) => {
     navigate(ROUTES.STUDENT_DETAILS.replace(":id", id));
   };
 
   const lesson = query.data;
+
+  if (!lesson) {
+    return <div className="text-center text-gray-500">Dərs tapılmadı</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -47,7 +50,7 @@ const LessonDetails = () => {
       <div className="border rounded-md p-4 bg-white">
         <h3 className="text-lg font-semibold mb-3">Students</h3>
 
-        {lesson.students?.length ? (
+        {lesson.students && lesson.students.length > 0 ? (
           <div className="space-y-3">
             {lesson.students.map((student) => (
               <div

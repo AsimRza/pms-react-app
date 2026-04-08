@@ -5,6 +5,7 @@ import { useServices, useUser } from "../../../providers/hooks";
 import Loading from "../../../shared/components/ui/Loading";
 import Error from "../../../shared/components/ui/Error";
 import { toast } from "react-toastify";
+import type { IErrorResponse } from "@/services/httpClient";
 
 const GradingList = () => {
   const { studentService } = useServices();
@@ -19,11 +20,11 @@ const GradingList = () => {
   });
 
   const { mutate: deleteGrade, isPending } = useMutation({
-    mutationFn: (id) => studentService.deleteGrading(id),
+    mutationFn: (id: number) => studentService.deleteGrading(id),
     onSuccess: () => {
       query.refetch();
     },
-    onError: (error) => {
+    onError: (error: IErrorResponse) => {
       toast.error(
         "Qiymetlendirme silerken bir xeta bash verdi: " + error.message,
       );
@@ -38,6 +39,12 @@ const GradingList = () => {
     return <Error message={query.error.message} />;
   }
 
+  if (!query.data) {
+    return (
+      <div className="text-center text-gray-500">Qiymetlendirme tapilmadi</div>
+    );
+  }
+
   if (query.data.length === 0) {
     return (
       <div className="text-center text-gray-500">
@@ -46,7 +53,7 @@ const GradingList = () => {
     );
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     deleteGrade(id);
   };
 

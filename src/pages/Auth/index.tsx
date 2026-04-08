@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { User, Lock, LogIn } from "lucide-react";
 import Input from "@shared/components/ui/Input";
 import Button from "@shared/components/ui/Button";
@@ -8,6 +7,7 @@ import { useServices } from "../../providers/hooks";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router";
 import { ROUTES } from "../../shared/consts";
+import type { ILoginData } from "@/services/auth/model";
 
 const Login = () => {
   const {
@@ -26,13 +26,13 @@ const Login = () => {
   const { authService } = useServices();
 
   const loginMutation = useMutation({
-    mutationFn: (data) => authService.login(data),
+    mutationFn: (data: ILoginData) => authService.login(data),
   });
   const location = useLocation();
 
   const from = location.state?.from?.pathname || ROUTES.STATISTICS;
 
-  const handleLogin = (data) => {
+  const handleLogin = (data: ILoginData) => {
     loginMutation.mutate(data, {
       onSuccess: (response) => {
         toast.success("Uğurla daxil oldunuz!");

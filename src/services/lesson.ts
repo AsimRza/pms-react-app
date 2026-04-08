@@ -1,14 +1,23 @@
 import type { IHttpClient } from "./httpClient";
 
-interface ILesson {
+export interface IStudent {
+  id: string;
+  firstName: string;
+  lastName: string;
+  GPA: number;
+  studentCode: string;
+  image: string;
+}
+
+export interface ILesson {
   id: number;
   name: string;
   teachers: string[];
-  students: { id: string }[];
+  students: IStudent[];
   room: string;
 }
 
-interface ILessonService {
+export interface ILessonService {
   getList: () => Promise<ILesson[]>;
   getById: (id: number) => Promise<ILesson>;
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-export const useDebounced = (value, delay = 500) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+export const useDebounced = (value: string, delay = 500) => {
+  const [debouncedValue, setDebouncedValue] = useState<string>(value);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -17,7 +17,7 @@ export const useDebounced = (value, delay = 500) => {
 };
 
 export const useModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);

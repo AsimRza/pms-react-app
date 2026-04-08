@@ -13,7 +13,7 @@ import UserProvider from "./providers/UserProvider";
 import StudentDetails from "./pages/Dashboard/StudentDetails";
 import LessonDetails from "./pages/Dashboard/LessonDetails";
 
-function App() {
+export const App = () => {
   return (
     <>
       <Routes>
@@ -63,6 +63,4 @@ function App() {
       <ToastContainer position="bottom-right" />
     </>
   );
-}
-
-export default App;
+};

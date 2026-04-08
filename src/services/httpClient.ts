@@ -39,14 +39,22 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+export interface IErrorResponse {
+  message: string;
+  statusCode: number;
+  code: Number;
+}
 
 let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (value: string | null) => void;
-  reject: (error: unknown) => void;
+  reject: (error: IErrorResponse) => void;
 }> = [];
 
-const processQueue = (error: unknown, token: string | null = null) => {
+const processQueue = (
+  error: IErrorResponse | null,
+  token: string | null = null,
+) => {
   failedQueue.forEach(({ resolve, reject }) => {
     if (error) {
       reject(error);
@@ -143,7 +151,7 @@ api.interceptors.response.use(
 
         return api(originalRequest);
       } catch (refreshError) {
-        processQueue(refreshError, null);
+        processQueue(refreshError as IErrorResponse, null);
         await logoutRequest();
         clearAuth();
         redirectToLogin();

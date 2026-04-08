@@ -7,20 +7,31 @@ import { useMutation, useQueries } from "@tanstack/react-query";
 import { useServices, useUser } from "../../../providers/hooks";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { queryClient } from "../../../main";
+import { queryClient } from "@/shared/queryClient";
+import type { useModal } from "@/shared/hooks";
+import type { IGradeRequest } from "@/services/student";
 
-const AddGrading = ({ isOpen, closeModal }) => {
+type ModalReturnType = ReturnType<typeof useModal>;
+
+interface IProps {
+  isOpen: ModalReturnType["isOpen"];
+  closeModal: ModalReturnType["closeModal"];
+}
+
+type Form = Omit<IGradeRequest, "teacher">;
+
+const AddGrading: React.FC<IProps> = ({ isOpen, closeModal }) => {
   const { firstName, lastName } = useUser();
 
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm({
+  } = useForm<Form>({
     defaultValues: {
-      studentId: "",
-      lessonId: "",
-      grade: "",
+      studentId: undefined,
+      lessonId: undefined,
+      grade: undefined,
     },
   });
 
@@ -43,9 +54,9 @@ const AddGrading = ({ isOpen, closeModal }) => {
 
   const mutation = useMutation({
     mutationKey: ["addGrading"],
-    mutationFn: (data) => studentService.createGrading(data),
+    mutationFn: (data: IGradeRequest) => studentService.createGrading(data),
     onSuccess: () => {
-      queryClient.invalidateQueries(["getGrading"]);
+      queryClient.invalidateQueries({ queryKey: ["getGrading"] });
       toast.success("Qiymetlendirme ugurla elave olundu");
       closeModal();
     },
@@ -66,7 +77,7 @@ const AddGrading = ({ isOpen, closeModal }) => {
     value: lesson.id,
   }));
 
-  const handleFormSubmit = (data) => {
+  const handleFormSubmit = (data: Form) => {
     mutation.mutate({ ...data, teacher: `${firstName} ${lastName}` });
   };
 
@@ -112,7 +123,6 @@ const AddGrading = ({ isOpen, closeModal }) => {
 
         <div>
           <Input
-            label="Grade"
             type="number"
             placeholder="Enter grade"
             {...register("grade", {
@@ -132,7 +142,7 @@ const AddGrading = ({ isOpen, closeModal }) => {
           )}
         </div>
 
-        <Button loading={mutation.isLoading} type="submit" className="mt-4">
+        <Button loading={mutation.isPending} type="submit" className="mt-4">
           Save
         </Button>
       </form>

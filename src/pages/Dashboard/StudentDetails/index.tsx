@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServices } from "../../../providers/hooks";
@@ -11,7 +10,7 @@ const StudentDetails = () => {
   const { studentService } = useServices();
   const studentQuery = useQuery({
     queryKey: ["student", id],
-    queryFn: () => studentService.getById(id),
+    queryFn: () => studentService.getById(Number(id)),
   });
 
   if (studentQuery.isLoading) {
@@ -23,6 +22,10 @@ const StudentDetails = () => {
   }
 
   const student = studentQuery.data;
+
+  if (!student) {
+    return <div className="text-center text-gray-500">Tələbə tapılmadı</div>;
+  }
 
   return (
     <div className="space-y-6">

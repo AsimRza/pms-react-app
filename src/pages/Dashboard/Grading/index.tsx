@@ -1,4 +1,3 @@
-import React from "react";
 import GradingList from "./List";
 import { Plus } from "lucide-react";
 import { useModal } from "../../../shared/hooks";

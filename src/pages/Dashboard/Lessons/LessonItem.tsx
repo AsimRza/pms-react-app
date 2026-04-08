@@ -1,7 +1,12 @@
 import React from "react";
 import Button from "../../../shared/components/ui/Button";
+import type { ILesson } from "@/services/lesson";
 
-const LessonItem = ({ lesson, onView }) => {
+interface IProps {
+  lesson: ILesson;
+  onView: (lessonId: number) => void;
+}
+const LessonItem: React.FC<IProps> = ({ lesson, onView }) => {
   return (
     <div className="p-4 border rounded-md bg-white shadow-sm hover:shadow-md transition-shadow">
       <div className="mb-4">

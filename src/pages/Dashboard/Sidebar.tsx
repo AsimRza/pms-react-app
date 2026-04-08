@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink, useNavigate } from "react-router";
 import {
   GraduationCap,
@@ -13,15 +12,17 @@ import { clearAuth } from "../../shared/utils";
 import { toast } from "react-toastify";
 import { useServices, useUser } from "../../providers/hooks";
 import Button from "../../shared/components/ui/Button";
-import { queryClient } from "../../main";
 
+interface INavItem {
+  to: string;
+  label: string;
+  icon: React.ElementType;
+}
 const Sidebar = () => {
   const navigate = useNavigate();
 
   // Placeholder user data
   const user = useUser();
-
-  console.log(user, "user");
 
   const { authService } = useServices();
 
@@ -41,7 +42,7 @@ const Sidebar = () => {
     logoutQuery.mutate();
   };
 
-  const navItems = [
+  const navItems: INavItem[] = [
     { to: "/dashboard/students", label: "Tələbələr", icon: Users },
     { to: "/dashboard/lessons", label: "Dərslər", icon: BookOpen },
     { to: "/dashboard/grading", label: "Qiymətləndirmə", icon: GraduationCap },

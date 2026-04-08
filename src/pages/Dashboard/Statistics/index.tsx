@@ -1,4 +1,3 @@
-import React from "react";
 import { PageHeader } from "../../../shared/components/PageHeader";
 import { Bar } from "react-chartjs-2";
 import {

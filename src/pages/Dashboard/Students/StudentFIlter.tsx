@@ -4,6 +4,7 @@ import Input from "../../../shared/components/ui/Input";
 import { useDebounced } from "../../../shared/hooks";
 import { useSearchParams } from "react-router";
 import { PageHeader } from "../../../shared/components/PageHeader";
+import type { IFilter, ISorting } from ".";
 
 const sortingOptions = [
   { label: "Ad", value: "name" },
@@ -12,7 +13,16 @@ const sortingOptions = [
   { label: "Ödənişsiz", value: "unpaid" },
 ];
 
-export const StudentFilter = ({
+interface IProps {
+  sorting: ISorting;
+  filter: IFilter;
+  setSorting: React.Dispatch<React.SetStateAction<ISorting>>;
+  setFilter: React.Dispatch<React.SetStateAction<IFilter>>;
+  limit: number;
+  setLimit: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export const StudentFilter: React.FC<IProps> = ({
   sorting,
   setSorting,
   filter,
@@ -54,7 +64,7 @@ export const StudentFilter = ({
         rightPanel={
           <div className="flex gap-5 items-center">
             <Select
-              value={limit}
+              value={limit.toString()}
               onChange={(e) => setLimit(Number(e.target.value))}
               options={[
                 { label: "12", value: 12 },

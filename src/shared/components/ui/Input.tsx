@@ -1,5 +1,13 @@
 import React from "react";
 
+interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  type?: string;
+  placeholder?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
+}
+
 const Input = ({
   type = "text",
   placeholder,
@@ -8,7 +16,7 @@ const Input = ({
   className = "",
 
   ...props
-}) => {
+}: IProps) => {
   return (
     <input
       type={type}
