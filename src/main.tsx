@@ -4,8 +4,9 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ServiceProvider } from "./providers/ServiceProvider.jsx";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
@@ -16,11 +17,15 @@ const queryClient = new QueryClient({
   },
 });
 
-createRoot(document.getElementById("root")).render(
+let root = document.getElementById("root")!;
+
+createRoot(root).render(
   <StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <ServiceProvider>
+          <App />
+        </ServiceProvider>
       </QueryClientProvider>
     </BrowserRouter>
   </StrictMode>,

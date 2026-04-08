@@ -1,0 +1,19 @@
+{
+  "name": "my-node-server",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Simple express auth server",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
