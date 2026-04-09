@@ -1,4 +1,3 @@
-import React from "react";
 import LessonItem from "./LessonItem";
 import { useQuery } from "@tanstack/react-query";
 import { useServices } from "../../../providers/hooks";
