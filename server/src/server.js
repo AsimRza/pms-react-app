@@ -10,11 +10,15 @@ import userRouter from "./routers//user.router.js";
 import statisticsRouter from "./routers/statistics.router.js";
 
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://pms-react-app-5yvu.vercel.app",
+    ],
     credentials: true,
     exposedHeaders: ["X-Total-Count", "X-Page", "X-Limit", "X-Has-Next-Page"],
   }),

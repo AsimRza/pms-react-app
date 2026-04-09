@@ -33,7 +33,7 @@ export interface IHttpClient {
 }
 
 const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "http://localhost:4000/api",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -73,7 +73,7 @@ const redirectToLogin = () => {
 const logoutRequest = async () => {
   try {
     await axios.post(
-      "http://localhost:3000/api/auth/logout",
+      "http://localhost:4000/api/auth/logout",
       {},
       { withCredentials: true },
     );
@@ -131,7 +131,7 @@ api.interceptors.response.use(
         const refreshToken = localStorage.getItem("refreshToken");
 
         const refreshResponse = await axios.post(
-          "http://localhost:3000/api/auth/refresh",
+          "http://localhost:4000/api/auth/refresh",
           { refreshToken },
           { withCredentials: true },
         );
