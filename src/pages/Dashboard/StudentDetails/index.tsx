@@ -108,7 +108,7 @@ const StudentDetails = () => {
             >
               <span className="text-sm font-medium">{lesson.name}</span>
               <span className="text-sm text-gray-700">
-                Grade: {lesson.grade}
+                Qiymet: {lesson.grade}
               </span>
             </div>
           ))}
