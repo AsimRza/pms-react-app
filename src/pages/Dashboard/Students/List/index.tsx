@@ -54,14 +54,12 @@ const StudentList: React.FC<IProps> = ({ filter, limit = 12 }) => {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  console.log(hasNextPage);
-
   if (isLoading) {
-    return <Loading />;
+    return <Loading dataTestId="student-list-loading" />;
   }
 
   if (isError) {
-    return <Error message={error.message} />;
+    return <Error message={error.message} dataTestId="student-list-error" />;
   }
 
   const students = data?.pages.flatMap((page) => page.students) || [];
@@ -106,10 +104,16 @@ const StudentList: React.FC<IProps> = ({ filter, limit = 12 }) => {
         ))}
       </div>
 
-      {hasNextPage && <div ref={sentinelRef} className="h-10 mt-4" />}
+      {hasNextPage && (
+        <div
+          data-testid="student-list-sentinel"
+          ref={sentinelRef}
+          className="h-10 mt-4"
+        />
+      )}
       {isFetchingNextPage && (
         <div className="flex justify-center mt-4">
-          <Loading />
+          <Loading dataTestId="student-list-next-loading" />
         </div>
       )}
     </div>

@@ -13,8 +13,6 @@ import UserProvider from "./providers/UserProvider";
 import StudentDetails from "./pages/Dashboard/StudentDetails";
 import LessonDetails from "./pages/Dashboard/LessonDetails";
 
-console.log("AI Token:", import.meta.env.VITE_AI_TOKEN);
-
 export const App = () => {
   return (
     <>
